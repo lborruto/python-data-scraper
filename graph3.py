@@ -1,30 +1,30 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 def draw3 ():
 
-    # Fixing random state for reproducibility
-    np.random.seed(19680801)
+    labels = ['2015', '2016', '2017', '2018', '2019', '2020', '2021']
+    demande_means = [20, 34, 30, 35, 27, 30, 31]
+    offre_means = [10000, 32, 34, 20, 25,27,20]
 
-    dt = 0.01
-    t = np.arange(0, 30, dt)
-    nse1 = np.random.randn(len(t))                 # white noise 1
-    nse2 = np.random.randn(len(t))                 # white noise 2
+    x = np.arange(len(labels))  # the label locations
+    width = 0.35  # the width of the bars
 
-    # Two signals with a coherent part at 10Hz and a random part
-    s1 = np.sin(2 * np.pi * 10 * t) + nse1
-    s2 = np.sin(2 * np.pi * 10 * t) + nse2
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(x - width/2, demande_means, width, label='Demande')
+    rects2 = ax.bar(x + width/2, offre_means, width, label='Offre')
 
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel('Quantités')
+    ax.set_title("Comparaison de l'offres et de la demande par rapport au années  ")
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.set_xlabel('Années')
+    ax.legend()
 
-    fig, axs = plt.subplots(2, 1)
-    axs[0].plot(t, s1, t, s2)
-    axs[0].set_xlim(0, 2)
-    axs[0].set_xlabel('time')
-    axs[0].set_ylabel('s1 and s2')
-    axs[0].grid(True)
-
-    cxy, f = axs[1].cohere(s1, s2, 256, 1. / dt)
-    axs[1].set_ylabel('coherence')
+    ax.bar_label(rects1, padding=3)
+    ax.bar_label(rects2, padding=3)
 
     fig.tight_layout()
+
     plt.show()

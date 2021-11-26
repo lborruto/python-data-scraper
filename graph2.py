@@ -1,30 +1,39 @@
-import numpy as np
+import csv
 import matplotlib.pyplot as plt
+import numpy as np
+from datetime import date
 
 def draw2 ():
+	
+	# Introducing variables
+	x = []
+	y1 = []
+	y2 = []
 
-    # Fixing random state for reproducibility
-    np.random.seed(19680801)
+	# Collecting the csv data of the BitCoin's value evolution
+	with open('2016-01-01_2021-11-09_bitcoinprice_org.csv', 'r') as csvfile:
+		btc = csv.reader(csvfile, delimiter = ';')
 
-    dt = 0.01
-    t = np.arange(0, 30, dt)
-    nse1 = np.random.randn(len(t))                 # white noise 1
-    nse2 = np.random.randn(len(t))                 # white noise 2
+		for row in btc:
+			x.append(date.fromisoformat(row[0]))
+			y1.append(int(row[1]))
 
-    # Two signals with a coherent part at 10Hz and a random part
-    s1 = np.sin(2 * np.pi * 10 * t) + nse1
-    s2 = np.sin(2 * np.pi * 10 * t) + nse2
+	# Collecting the csv data of the Ethereum's value evolution
+	with open('2016-01-01_2021-11-09_ethereumprice_org.csv', 'r') as csvfile:
+		eth = csv.reader(csvfile, delimiter = ';')
 
+		for row in eth:
+			y2.append(int(row[7]))
 
-    fig, axs = plt.subplots(2, 1)
-    axs[0].plot(t, s1, t, s2)
-    axs[0].set_xlim(0, 2)
-    axs[0].set_xlabel('time')
-    axs[0].set_ylabel('s1 and s2')
-    axs[0].grid(True)
+	# Create a figure containing the two axes.
+	fig, ax_b = plt.subplots()
+	ax_b.plot(x, y1, color='tab:blue')
+	ax_e = ax_b.twinx()
+	ax_e.plot(x, y2, color='tab:orange')
 
-    cxy, f = axs[1].cohere(s1, s2, 256, 1. / dt)
-    axs[1].set_ylabel('coherence')
+	# Add the labels of the 'y' column in the same color as the axes
+	ax_b.set_ylabel('BitCoin', color='tab:blue')
+	ax_e.set_ylabel('Ethereum', color='tab:orange')
 
-    fig.tight_layout()
-    plt.show()
+	# Printing the figure
+	plt.show()
